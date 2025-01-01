@@ -1,0 +1,10 @@
+[package]
+name = "newton-fractal"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.15.0"
+bevy-inspector-egui = "0.28.0"
+num-complex = "0.4.6"
+rand = "0.8.5"
