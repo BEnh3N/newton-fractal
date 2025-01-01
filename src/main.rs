@@ -3,13 +3,8 @@ use bevy::{
     prelude::*,
     render::storage::ShaderStorageBuffer,
     sprite::Material2dPlugin,
-    window::WindowResized,
 };
-use newton_fractal::{
-    complex_math::{derivative, expand_polynomial},
-    drag_and_drop::{handle_drag, DragState, Draggable},
-    shader::{keyboard_input, update_shader_inputs, NewtonShader, Root, Shader, ShaderParams},
-};
+use newton_fractal::{complex_math::*, drag_and_drop::*, shader::*, *};
 
 fn main() {
     App::new()
@@ -93,24 +88,7 @@ fn setup(
         Mesh2d(meshes.add(Rectangle::new(1.0, 1.0))),
         MeshMaterial2d(material_handle),
         Transform::from_scale(Vec3::new(window.width(), window.height(), 1.0)),
-        Shader,
+        ShaderEntity,
     ));
     commands.spawn(Camera2d);
-}
-
-fn window_resize(
-    mut resize: EventReader<WindowResized>,
-    params: Res<ShaderParams>,
-    mut shader: Query<&mut Transform, With<Shader>>,
-    mut roots: Query<(&Root, &mut Transform), Without<Shader>>,
-) {
-    if let Some(e) = resize.read().last() {
-        let mut shader_transform = shader.get_single_mut().unwrap();
-        shader_transform.scale = Vec3::new(e.width, e.height, 1.0);
-
-        for (root, mut root_transform) in roots.iter_mut() {
-            root_transform.translation.x = root.pos.x / params.scale.x * e.width / 2.0;
-            root_transform.translation.y = root.pos.y / params.scale.y * e.height / 2.0;
-        }
-    }
 }

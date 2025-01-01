@@ -10,7 +10,7 @@ use bevy::{
 use crate::complex_math::{derivative, expand_polynomial};
 
 #[derive(Component)]
-pub struct Shader;
+pub struct ShaderEntity;
 
 #[derive(Component, ShaderType, Clone, Debug)]
 pub struct Root {
