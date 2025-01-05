@@ -1,10 +1,6 @@
-use bevy::{
-    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
-    prelude::*,
-    render::storage::ShaderStorageBuffer,
-    sprite::Material2dPlugin,
-};
-use newton_fractal::{complex_math::*, drag_and_drop::*, shader::*, *};
+use bevy::{prelude::*, render::storage::ShaderStorageBuffer, sprite::Material2dPlugin};
+use bevy_egui::EguiPlugin;
+use newton_fractal::{complex_math::*, drag_and_drop::*, gui::*, shader::*, *};
 
 fn main() {
     App::new()
@@ -13,17 +9,19 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             Material2dPlugin::<NewtonShader>::default(),
-            FrameTimeDiagnosticsPlugin::default(),
-            LogDiagnosticsPlugin::default(),
+            EguiPlugin,
         ))
         .add_systems(Startup, setup)
         .add_systems(
             Update,
             (
                 keyboard_input,
-                window_resize,
                 update_shader_inputs,
                 handle_drag,
+                scroll,
+                update_gui,
+                window_resize,
+                update_root_pos,
             ),
         )
         .run();
@@ -31,7 +29,7 @@ fn main() {
 
 fn setup(
     mut commands: Commands,
-    params: Res<ShaderParams>,
+    mut params: ResMut<ShaderParams>,
     mut buffers: ResMut<Assets<ShaderStorageBuffer>>,
     mut custom_materials: ResMut<Assets<NewtonShader>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
@@ -39,6 +37,7 @@ fn setup(
     window: Query<&Window>,
 ) {
     let window = window.get_single().unwrap();
+    params.aspect_ratio = window.width() / window.height();
 
     // Define the roots of the polynomial and calculate the coefficients and derivative
     let roots = vec![
@@ -52,8 +51,8 @@ fn setup(
     let derivative = derivative(&coefficients);
 
     for root in &roots {
-        let x = root.pos.x / params.scale.x * window.width() / 2.0;
-        let y = root.pos.y / params.scale.y * window.height() / 2.0;
+        let x = root.pos.x * params.scale / params.aspect_ratio * window.width() / 2.0;
+        let y = root.pos.y * params.scale * window.height() / 2.0;
         let parent = commands
             .spawn((
                 Mesh2d(meshes.add(Circle::new(10.0))),

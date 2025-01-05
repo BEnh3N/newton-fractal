@@ -30,14 +30,16 @@ impl Root {
 pub struct ShaderParams {
     pub epsilon: f32,
     pub max_iterations: u32,
-    pub scale: Vec2,
+    pub scale: f32,
+    pub aspect_ratio: f32,
 }
 impl Default for ShaderParams {
     fn default() -> Self {
         ShaderParams {
             epsilon: 0.01,
             max_iterations: 25,
-            scale: Vec2::new(3.5, 2.0),
+            scale: 0.5,
+            aspect_ratio: 1.0,
         }
     }
 }
