@@ -34,9 +34,13 @@ pub fn scroll(mut mouse_scroll: EventReader<MouseWheel>, mut params: ResMut<Shad
             }
             MouseScrollUnit::Pixel => {
                 if e.y > 0.0 {
-                    params.scale *= 1.15;
+                    for _ in 0..e.y as usize {
+                        params.scale *= 1.01;
+                    }
                 } else {
-                    params.scale /= 1.15;
+                    for _ in 0..e.y.abs() as usize {
+                        params.scale /= 1.01;
+                    }
                 }
             }
         }
