@@ -30,8 +30,8 @@ fn fragment(
     // Find the closest real root
     var closest_root = roots[0];
     var closest_dist = distance(closest_root.pos, approx_root);
-    let array_length = i32(arrayLength(&roots));
     
+    let array_length = i32(arrayLength(&roots));
     for (var i = 1; i < array_length; i++) {
         let root = roots[i];
         let dist = distance(root.pos, approx_root);

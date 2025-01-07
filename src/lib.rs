@@ -25,7 +25,13 @@ pub fn window_resize(
 pub fn scroll(mut mouse_scroll: EventReader<MouseWheel>, mut params: ResMut<ShaderParams>) {
     for e in mouse_scroll.read() {
         match e.unit {
-            MouseScrollUnit::Line => {}
+            MouseScrollUnit::Line => {
+                if e.y > 0.0 {
+                    params.scale *= 1.15;
+                } else {
+                    params.scale /= 1.15;
+                }
+            }
             MouseScrollUnit::Pixel => {
                 params.scale += e.y * 0.1;
                 if params.scale < 0.5 {
