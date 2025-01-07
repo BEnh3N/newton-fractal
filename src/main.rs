@@ -90,4 +90,18 @@ fn setup(
         ShaderEntity,
     ));
     commands.spawn(Camera2d);
+
+    // Spawn in gridlines
+    commands.spawn((
+        Mesh2d(meshes.add(Rectangle::new(1.0, 1.0))),
+        MeshMaterial2d(materials.add(Color::WHITE)),
+        Transform::from_scale(Vec3::new(window.width(), 1.0, 1.0))
+            .with_translation(Vec3::new(0.0, 0.0, 0.5)),
+    ));
+    commands.spawn((
+        Mesh2d(meshes.add(Rectangle::new(1.0, 1.0))),
+        MeshMaterial2d(materials.add(Color::WHITE)),
+        Transform::from_scale(Vec3::new(1.0, window.height(), 1.0))
+            .with_translation(Vec3::new(0.0, 0.0, 0.5)),
+    ));
 }
