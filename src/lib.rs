@@ -7,8 +7,19 @@ use shader::*;
 
 pub mod complex_math;
 pub mod drag_and_drop;
+pub mod gridlines;
 pub mod gui;
 pub mod shader;
+
+pub fn coordinate_to_screen_space(
+    pos: Vec2,
+    window: &Window,
+    scale: f32,
+    aspect_ratio: f32,
+) -> Vec2 {
+    return pos * scale / Vec2::new(aspect_ratio, 1.0) * Vec2::new(window.width(), window.height())
+        / 2.0;
+}
 
 pub fn window_resize(
     mut resize: EventReader<WindowResized>,
@@ -59,8 +70,8 @@ pub fn update_root_pos(
     let window = window.get_single().unwrap();
 
     for (root, mut root_transform) in roots.iter_mut() {
-        root_transform.translation.x =
-            root.pos.x * params.scale / params.aspect_ratio * window.width() / 2.0;
-        root_transform.translation.y = root.pos.y * params.scale * window.height() / 2.0;
+        root_transform.translation =
+            coordinate_to_screen_space(root.pos, window, params.scale, params.aspect_ratio)
+                .extend(1.0);
     }
 }

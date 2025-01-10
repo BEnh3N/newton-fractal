@@ -1,5 +1,6 @@
 use bevy::{prelude::*, render::storage::ShaderStorageBuffer, sprite::Material2dPlugin};
 use bevy_egui::EguiPlugin;
+use gridlines::{create_gridlines, update_gridlines};
 use newton_fractal::{complex_math::*, drag_and_drop::*, gui::*, shader::*, *};
 
 fn main() {
@@ -11,7 +12,7 @@ fn main() {
             Material2dPlugin::<NewtonShader>::default(),
             EguiPlugin,
         ))
-        .add_systems(Startup, setup)
+        .add_systems(Startup, (setup, create_gridlines))
         .add_systems(
             Update,
             (
@@ -22,6 +23,7 @@ fn main() {
                 update_gui,
                 window_resize,
                 update_root_pos,
+                update_gridlines,
             ),
         )
         .run();
@@ -51,13 +53,15 @@ fn setup(
     let derivative = derivative(&coefficients);
 
     for root in &roots {
-        let x = root.pos.x * params.scale / params.aspect_ratio * window.width() / 2.0;
-        let y = root.pos.y * params.scale * window.height() / 2.0;
+        let screen_pos =
+            coordinate_to_screen_space(root.pos, window, params.scale, params.aspect_ratio);
+        // let x = root.pos.x * params.scale / params.aspect_ratio * window.width() / 2.0;
+        // let y = root.pos.y * params.scale * window.height() / 2.0;
         let parent = commands
             .spawn((
                 Mesh2d(meshes.add(Circle::new(10.0))),
                 MeshMaterial2d(materials.add(Color::BLACK)),
-                Transform::from_xyz(x, y, 1.0),
+                Transform::from_xyz(screen_pos.x, screen_pos.y, 1.0),
                 root.clone(),
                 Draggable,
             ))
@@ -90,18 +94,4 @@ fn setup(
         ShaderEntity,
     ));
     commands.spawn(Camera2d);
-
-    // Spawn in gridlines
-    commands.spawn((
-        Mesh2d(meshes.add(Rectangle::new(1.0, 1.0))),
-        MeshMaterial2d(materials.add(Color::WHITE)),
-        Transform::from_scale(Vec3::new(window.width(), 1.0, 1.0))
-            .with_translation(Vec3::new(0.0, 0.0, 0.5)),
-    ));
-    commands.spawn((
-        Mesh2d(meshes.add(Rectangle::new(1.0, 1.0))),
-        MeshMaterial2d(materials.add(Color::WHITE)),
-        Transform::from_scale(Vec3::new(1.0, window.height(), 1.0))
-            .with_translation(Vec3::new(0.0, 0.0, 0.5)),
-    ));
 }
