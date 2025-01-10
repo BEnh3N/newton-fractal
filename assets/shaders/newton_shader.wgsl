@@ -7,6 +7,7 @@ struct Params {
     epsilon: f32,
     max_iter: i32,
     scale: f32,
+    offset: vec2f,
     aspect_ratio: f32,
 }
 
@@ -21,7 +22,7 @@ fn fragment(
     ) -> @location(0) vec4f {
 
     // Convert uv space to coordinate space (-1, 1)
-    let coord = ((uv * 2.0 - 1.0) * vec2f(1.0, -1.0)) / params.scale * vec2f(params.aspect_ratio, 1.0);
+    let coord = ((uv * 2.0 - 1.0) * vec2f(1.0, -1.0)) / params.scale * vec2f(params.aspect_ratio, 1.0) - params.offset;
 
     // Use Newton-Raphson method to approximate the root
     let nr = newton_raphson(coord);

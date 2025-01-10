@@ -31,6 +31,7 @@ pub struct ShaderParams {
     pub epsilon: f32,
     pub max_iterations: u32,
     pub scale: f32,
+    pub offset: Vec2,
     pub aspect_ratio: f32,
 }
 impl Default for ShaderParams {
@@ -39,6 +40,7 @@ impl Default for ShaderParams {
             epsilon: 0.01,
             max_iterations: 25,
             scale: 0.5,
+            offset: Vec2::ZERO,
             aspect_ratio: 1.0,
         }
     }

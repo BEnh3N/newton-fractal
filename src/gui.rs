@@ -27,6 +27,16 @@ pub fn update_gui(mut contexts: EguiContexts, mut params: ResMut<ShaderParams>, 
             });
             ui.end_row();
 
+            ui.label("Offset");
+            let offset_speed = 1.0 / params.scale / 10.0;
+            ui.horizontal(|ui| {
+                ui.add(egui::DragValue::new(&mut params.offset.x).speed(offset_speed));
+                ui.monospace("i, ");
+                ui.add(egui::DragValue::new(&mut params.offset.y).speed(offset_speed));
+                ui.monospace("j");
+            });
+            ui.end_row();
+
             ui.label("Epsilon");
             ui.horizontal(|ui| {
                 if ui.button("×10").clicked() {
