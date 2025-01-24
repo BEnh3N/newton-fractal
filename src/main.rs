@@ -1,4 +1,6 @@
-use bevy::{prelude::*, render::storage::ShaderStorageBuffer, sprite::Material2dPlugin};
+use bevy::{
+    prelude::*, render::storage::ShaderStorageBuffer, sprite::Material2dPlugin, window::PresentMode,
+};
 use bevy_egui::EguiPlugin;
 use gridlines::{create_gridlines, update_gridlines};
 use newton_fractal::{complex_math::*, drag_and_drop::*, gui::*, shader::*, *};
@@ -8,7 +10,14 @@ fn main() {
         .init_resource::<DragState>()
         .init_resource::<ShaderParams>()
         .add_plugins((
-            DefaultPlugins,
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "Newton Fractal".into(),
+                    present_mode: PresentMode::Immediate,
+                    ..default()
+                }),
+                ..default()
+            }),
             Material2dPlugin::<NewtonShader>::default(),
             EguiPlugin,
         ))
@@ -53,10 +62,7 @@ fn setup(
     let derivative = derivative(&coefficients);
 
     for root in &roots {
-        let screen_pos =
-            coordinate_to_screen_space(root.pos, window, params.scale, params.aspect_ratio);
-        // let x = root.pos.x * params.scale / params.aspect_ratio * window.width() / 2.0;
-        // let y = root.pos.y * params.scale * window.height() / 2.0;
+        let screen_pos = coordinate_to_screen_space(root.pos, window, &params);
         let parent = commands
             .spawn((
                 Mesh2d(meshes.add(Circle::new(10.0))),

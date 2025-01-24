@@ -34,8 +34,7 @@ pub fn update_gridlines(
     mut v_gridlines: Query<&mut Transform, (With<VerticalGridline>, Without<HorizontalGridline>)>,
 ) {
     let window = window.get_single().unwrap();
-    let screen_pos =
-        coordinate_to_screen_space(params.offset, window, params.scale, params.aspect_ratio);
+    let screen_pos = coordinate_to_screen_space(Vec2::ZERO, window, &params);
 
     for mut h_gridline in h_gridlines.iter_mut() {
         h_gridline.scale = Vec3::new(window.width(), 1.0, 1.0);

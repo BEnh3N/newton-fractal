@@ -1,3 +1,5 @@
+use crate::screen_to_coordinate_space;
+
 use super::shader::{Root, ShaderParams};
 use bevy::prelude::*;
 
@@ -50,10 +52,7 @@ pub fn handle_drag(
     if let Some(selected_entity) = drag_state.selected_entity {
         if let Ok((_, mut transform, mut root)) = draggable_objects.get_mut(selected_entity) {
             transform.translation = cursor_position.extend(transform.translation.z);
-            root.pos = cursor_position
-                / Vec2::new(window.width() / 2.0, window.height() / 2.0)
-                / params.scale
-                * Vec2::new(params.aspect_ratio, 1.0);
+            root.pos = screen_to_coordinate_space(cursor_position, &window, &params);
         }
     }
 }
