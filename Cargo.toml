@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = "0.15.0"
-bevy-inspector-egui = "0.28.0"
-bevy_egui = "0.31.1"
-num-complex = "0.4.6"
-rand = "0.8.5"
+bevy = "0.17"
+bevy_egui = "0.38"
+# bevy-inspector-egui = "0.35"
+num-complex = "0.4"
+rand = "0.9"

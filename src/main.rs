@@ -1,7 +1,8 @@
 use bevy::{
-    prelude::*, render::storage::ShaderStorageBuffer, sprite::Material2dPlugin, window::PresentMode,
+    prelude::*, render::storage::ShaderStorageBuffer, sprite_render::Material2dPlugin,
+    window::PresentMode,
 };
-use bevy_egui::EguiPlugin;
+use bevy_egui::{EguiPlugin, EguiPrimaryContextPass};
 use gridlines::{create_gridlines, update_gridlines};
 use newton_fractal::{complex_math::*, drag_and_drop::*, gui::*, shader::*, *};
 
@@ -19,7 +20,7 @@ fn main() {
                 ..default()
             }),
             Material2dPlugin::<NewtonShader>::default(),
-            EguiPlugin,
+            EguiPlugin::default(),
         ))
         .add_systems(Startup, (setup, create_gridlines))
         .add_systems(
@@ -29,12 +30,12 @@ fn main() {
                 update_shader_inputs,
                 handle_drag,
                 scroll,
-                update_gui,
                 window_resize,
                 update_root_pos,
                 update_gridlines,
             ),
         )
+        .add_systems(EguiPrimaryContextPass, update_gui)
         .run();
 }
 
@@ -47,7 +48,7 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     window: Query<&Window>,
 ) {
-    let window = window.get_single().unwrap();
+    let window = window.single().unwrap();
     params.aspect_ratio = window.width() / window.height();
 
     // Define the roots of the polynomial and calculate the coefficients and derivative

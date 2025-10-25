@@ -8,7 +8,7 @@ pub fn create_gridlines(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    let window = window.get_single().unwrap();
+    let window = window.single().unwrap();
 
     // Spawn in gridlines
     commands.spawn((
@@ -33,7 +33,7 @@ pub fn update_gridlines(
     mut h_gridlines: Query<&mut Transform, (With<HorizontalGridline>, Without<VerticalGridline>)>,
     mut v_gridlines: Query<&mut Transform, (With<VerticalGridline>, Without<HorizontalGridline>)>,
 ) {
-    let window = window.get_single().unwrap();
+    let window = window.single().unwrap();
     let screen_pos = coordinate_to_screen_space(Vec2::ZERO, window, &params);
 
     for mut h_gridline in h_gridlines.iter_mut() {

@@ -1,10 +1,16 @@
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContexts};
 
-use crate::ShaderParams;
+use crate::{shader::Root, ShaderParams};
 
-pub fn update_gui(mut contexts: EguiContexts, mut params: ResMut<ShaderParams>, time: Res<Time>) {
-    egui::Window::new("Newton Fractal").show(&contexts.ctx_mut(), |ui| {
+pub fn update_gui(
+    mut contexts: EguiContexts,
+    mut params: ResMut<ShaderParams>,
+    time: Res<Time>,
+    mut _roots: Query<&mut Root>,
+) {
+    let ctx = contexts.ctx_mut().unwrap();
+    egui::Window::new("Newton Fractal").show(ctx, |ui| {
         egui::Grid::new("params_grid").show(ui, |ui| {
             ui.label("FPS");
             ui.monospace(format!("{:.0}", 1.0 / time.delta_secs()));
@@ -53,6 +59,25 @@ pub fn update_gui(mut contexts: EguiContexts, mut params: ResMut<ShaderParams>, 
                     }
                 }
             });
+            // ui.end_row();
+
+            // ui.collapsing("Roots", |ui| {
+            //     for mut root in roots.iter_mut() {
+            //         ui.horizontal(|ui| {
+            //             ui.label(format!("Root ({:.2}, {:.2})", root.pos.x, root.pos.y));
+            //             let mut color = [root.color.red, root.color.green, root.color.blue];
+            //             if ui.color_edit_button_rgb(&mut color).changed() {
+            //                 root.color = LinearRgba::rgb(color[0], color[1], color[2])
+            //             }
+            //             // ui.color_edit_button_srgba(&mut root.color);
+            //             // if ui.button("Reset").clicked() {
+            //             //     root.pos = params.offset; // Reset to the current offset
+            //             //     root.color = Color::srgb_u8(255, 255, 255).into(); // Reset to default color
+            //             // }
+            //         });
+            //         // ui.end_row();
+            //     }
+            // })
         })
     });
 }

@@ -1,10 +1,11 @@
 use bevy::{
     prelude::*,
     render::{
-        render_resource::{AsBindGroup, ShaderRef, ShaderType},
+        render_resource::{AsBindGroup, ShaderType},
         storage::ShaderStorageBuffer,
     },
-    sprite::Material2d,
+    shader::ShaderRef,
+    sprite_render::Material2d,
 };
 
 use crate::complex_math::{derivative, expand_polynomial};
@@ -107,8 +108,10 @@ pub fn keyboard_input(keyboard_input: Res<ButtonInput<KeyCode>>, mut params: Res
     }
 
     if keyboard_input.just_pressed(KeyCode::ArrowDown) {
-        params.max_iterations -= 1;
-        println!("Max iterations: {}", params.max_iterations);
+        if params.max_iterations > 0 {
+            params.max_iterations -= 1;
+            println!("Max iterations: {}", params.max_iterations);
+        }
     }
     if keyboard_input.just_pressed(KeyCode::ArrowRight) {
         params.epsilon *= 0.1;

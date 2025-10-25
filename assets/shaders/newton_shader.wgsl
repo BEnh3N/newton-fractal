@@ -21,7 +21,7 @@ fn fragment(
     @location(2) uv: vec2f,
     ) -> @location(0) vec4f {
 
-    // Convert uv space to coordinate space (-1, 1)
+    // Convert uv space to coordinate space
     let coord = ((uv * 2.0 - 1.0) * vec2f(1.0, -1.0)) / params.scale * vec2f(params.aspect_ratio, 1.0) - params.offset;
 
     // Use Newton-Raphson method to approximate the root
@@ -43,9 +43,7 @@ fn fragment(
     }
 
     // let mul = 1.0 - (f32(nr.i) / f32(params.max_iter));
-    let mul = 1.0;
-    // return vec4f(root, 0.0, 1.0);
-    return closest_root.color * mul;
+    return closest_root.color;
 }
 
 struct nr_return {

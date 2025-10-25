@@ -18,7 +18,7 @@ pub fn handle_drag(
     mut draggable_objects: Query<(Entity, &mut Transform, &mut Root), With<Draggable>>,
     params: Res<ShaderParams>,
 ) {
-    let window = windows.get_single().unwrap();
+    let window = windows.single().unwrap();
     let cursor_position = if let Some(position) = window.cursor_position() {
         (position - Vec2::new(window.width() / 2.0, window.height() / 2.0)) * Vec2::new(1.0, -1.0)
     } else {
